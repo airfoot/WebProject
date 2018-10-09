@@ -1,0 +1,280 @@
+﻿@model WebProject.Models.UserViewModel
+
+<style>
+    .kv-avatar .krajee-default.file-preview-frame, .kv-avatar .krajee-default.file-preview-frame:hover {
+        margin: 0;
+        padding: 0;
+        border: none;
+        box-shadow: none;
+        text-align: center;
+    }
+
+    .kv-avatar {
+        display: inline-block;
+        height: 220px;
+        width: 210px;
+    }
+
+        .kv-avatar .file-input {
+            display: table-cell;
+            width: 210px;
+            height: 220px;
+        }
+
+    .kv-reqd {
+        color: red;
+        font-family: monospace;
+        font-weight: normal;
+    }
+
+    .row {
+        margin-top: 25px;
+    }
+</style>
+
+
+<div>
+
+    <div class="page-header">
+        <h2>编辑用户</h2>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-4 text-center">
+            <div class="kv-avatar">
+                <div>
+                    <img class="img-thumbnail" style="width:210px;height:220px;" id="showUserPicture" src="@Url.Action("GetUserPicture","Account",new { id = Model.Id })" />
+
+                </div>
+            </div>
+            <div style="margin-top:20px"></div>
+           
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ChangeUserPicture">
+                更新用户照片
+            </button>
+        </div>
+        <div class="col-sm-offset-4"></div>
+        @using (Html.BeginForm("EditUser", "Account",new {id=Model.Id }, FormMethod.Post, new { @class = "form-horizontal", enctype = "multipart/form-data", id = "CreateUserForm" }))
+        {
+
+
+
+
+            <div class="col-sm-8">
+                <div class="text-danger">
+                    @Html.ValidationSummary(true)
+                </div>
+                <div class="form-group row">
+
+                    @Html.LabelFor(m => m.FullName, new { @class = "col-sm-1 control-label" })
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.FullName, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.FullName, "", new { @class = "text-danger" })
+                    </div>
+
+                </div>
+
+                <div class="form-group row">
+
+                    @Html.LabelFor(m => m.UserName, new { @class = "col-sm-1 control-label" })
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.Password, new { @class = "col-sm-1 control-label" })
+                    <div class="col-sm-6">
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.Email, new { @class = "col-sm-1 control-label" })
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", id = "UserEmail" })
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.Title, new { @class = "col-sm-1 control-label" })
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.Department, new { @class = "col-sm-1 control-label" })
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.Department, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.DirectManagerEmail, new { @class = "col-sm-1 control-label" })
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.DirectManagerEmail, new { @class = "form-control", placeholder = "请填写正确的邮箱地址", id = "DirectManagerEmail" })
+                        @Html.ValidationMessageFor(m => m.DirectManagerEmail, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.HireDate, new { @class = "col-sm-1 control-label" })
+                    <div class="col-sm-6">
+
+
+                        <div class="input-group date" id="HireDate" data-date-format="MM/DD/YYYY/">
+                            @Html.TextBoxFor(m => m.HireDate, new { @class = "form-control", id = "HireDate" })
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                        @Html.ValidationMessageFor(m => m.HireDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.IdentityNumber, new { @class = "col-sm-1 control-label" })
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.IdentityNumber, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.ContactAddress, new { @class = "col-sm-1 control-label" })
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.ContactAddress, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    @Html.LabelFor(m => m.ContactPhone, new { @class = "col-sm-1 control-label" })
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.ContactPhone, new { @class = "form-control" })
+                    </div>
+                </div>
+
+
+
+
+                <div class="form-group">
+                    <hr>
+
+                    <div class="text-left col-sm-offset-1">
+                        <button type="submit" id="CreateUserFormSubmit" class="btn btn-primary" style="width:80px;margin-left:20px">保存</button>
+                    </div>
+                </div>
+            </div>
+
+        }
+
+    </div>
+
+    <div class="modal fade" id="ChangeUserPicture" tabindex="-1" role="dialog" aria-labelledby="changeUserPicture" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">更新照片</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="file-loading">
+                        <input id="ChangeUserPictureFile" name="userPicture" type="file">
+                    </div>
+                    <div id="UploadErrors"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="CloseUpdateUserPictureButton" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+ 
+
+    
+        $("#ChangeUserPictureFile").fileinput({
+            showPreview: true,
+            showUpload: true,
+            maxFileSize: 11500,
+            minFileCount: 1,
+            maxFileCount:1,
+            uploadUrl: "@Url.Action("UpdateUserPicture","Account",new {id=Model.Id })",
+            elErrorContainer: '#UploadErrors',
+            allowedFileExtensions: ["jpg", "jpeg", "png", "gif"],
+            uploadAsync: true
+        }).on("fileuploaded", function (events, params) {
+
+            var randomNumber = Math.random();
+            var src = "@Url.Action("GetUserPicture","Account",new {id=Model.Id})" + "?random=" + randomNumber;         
+            $("#showUserPicture").attr("src", src);
+
+        });
+
+       
+      
+    </script>
+    <!-- the fileinput plugin initialization -->
+    @*<script>
+         showPreview: true,
+        showUpload: true,
+        elErrorContainer: "#kartik-file-errors",
+        allowedFileExtensions: ["jpg", "png", "gif"],
+        uploadUrl: "/site/file-upload-single"
+
+
+            $("#userPicture").fileinput({
+
+
+                required: false,
+                validateInitialCount: false,
+                overwriteInitial: true,
+
+                showUpload: true,
+                uploadUrl:"/account/test",
+                maxFileSize: 11500,
+                maxFileCount: 1,
+                minFileCount: 0,
+                showClose: false,
+                showCaption: false,
+                browseLabel: '',
+                removeLabel: '',
+                browseIcon: '<i class="glyphicon glyphicon-folder-open"></i>',
+                removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
+                removeTitle: 'Cancel or reset changes',
+                elErrorContainer: '#kv-avatar-hint',
+                msgErrorClass: 'alert alert-block alert-danger',
+                defaultPreviewContent: '<img style="width:210px;height:220px" src="@Url.Action("GetUserPicture", "Account", new { id = Model.Id })" alt="Your Avatar">',
+                layoutTemplates: { main2: '{preview} ' + ' {remove} {browse}' },
+                allowedFileExtensions: ["jpg", "png", "gif", "jpeg"],
+                previewSettings: { image: { 'width': "210px", 'height': "220px", 'max-width': "210px", 'max-height': "220px" } },
+
+            });
+        </script>*@
+
+
+    <script type="text/javascript">
+
+        $("#HireDate").datetimepicker({
+            format: "MM/DD/YYYY",
+            defaultDate: moment(),
+            showClose: true,
+            showTodayButton: true
+
+        });
+
+
+    </script>
+
+
+
+</div>

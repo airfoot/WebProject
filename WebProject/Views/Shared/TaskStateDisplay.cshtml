@@ -1,0 +1,20 @@
+﻿@using WebProject.Infrastructure
+@model WebProject.Infrastructure.TaskState
+@if (Model == TaskState.Applying)
+{
+
+    @Html.Raw("申请中")
+}
+else if(Model == TaskState.Approved)
+{
+    @Html.Raw("已批准")
+}
+else if(Model == TaskState.Refused)
+{
+    @Html.Raw("已拒绝")
+}
+else if(Model == TaskState.Canceled)
+{
+    @Html.Raw("已取消")
+}
+

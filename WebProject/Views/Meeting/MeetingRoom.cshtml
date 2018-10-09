@@ -1,0 +1,220 @@
+﻿<style type='text/css'>
+    #calendar {
+        width: 100%;
+        margin: 0 auto;
+    }
+</style>
+
+
+<script type="text/javascript">
+    //下面代码注册TextArea多行输入框自动拉伸函数
+    (function ($) {
+        $.fn.autoTextarea = function (options) {
+            var defaults = {
+                maxHeight: null,//文本框是否自动撑高，默认：null，不自动撑高；如果自动撑高必须输入数值，该值作为文本框自动撑高的最大高度
+                minHeight: $(this).height() //默认最小高度，也就是文本框最初的高度，当内容高度小于这个高度的时候，文本以这个高度显示
+            };
+            var opts = $.extend({}, defaults, options);
+            return $(this).each(function () {
+                $(this).bind("paste cut keydown keyup focus blur", function () {
+                    var height, style = this.style;
+                    this.style.height = opts.minHeight + 'px';
+                    if (this.scrollHeight > opts.minHeight) {
+                        if (opts.maxHeight && this.scrollHeight > opts.maxHeight) {
+                            height = opts.maxHeight;
+                            style.overflowY = 'scroll';
+                        } else {
+                            height = this.scrollHeight;
+                            style.overflowY = 'hidden';
+                        }
+                        style.height = height + 'px';
+                    }
+                });
+            });
+        };
+    })(jQuery);
+</script>
+
+
+<div style="float:right; margin-bottom: 1em;">
+    <button class="btn btn-primary" onclick="CreateMeeting()"><span class="fa fa-plus-square-o"></span> 新建会议</button>
+</div>
+<h2>@ViewBag.MeetingName</h2>
+<input type="hidden" id="MeetingRoomId" value="@ViewBag.MeetingRoomId" />
+
+<!--下面的脚本初始化FullCalendar-->
+<script>
+    $(function () {
+
+        $('#calendar').fullCalendar({
+
+            header: {
+                left: 'month,agendaWeek,agendaDay custom',
+                center: 'title',
+                right: 'prevYear,prev,next,nextYear'
+            },
+            footer: {
+                left: '',
+                center: '',
+                right: 'prev,next'
+            },
+            customButtons: {
+                custom: {
+                    text: '新建会议',
+                    click: function () {
+                        CreateMeeting();
+
+                    }
+                },
+
+            },
+            eventLimit: true,
+          eventRender: function (eventObj, $el) {
+                $el.popover({
+                    title: "Meeting",
+                    content: eventObj.title + "<br/>" + "开始时间:" + (new Date(eventObj.start)).toLocaleString('zh-Hans-CN', { timeZone: 'UTC' }) + "<br/>" + "结束时间:" + (new Date(eventObj.end)).toLocaleString('zh-Hans-CN', { timeZone: 'UTC' }),
+                    trigger: 'hover',
+                    placement: 'top',
+                    container: 'body',
+                    html:true
+                });
+            },
+
+           eventSources: [
+
+                {
+                    url: '@Url.Action("GetMeetingEvents","Meeting",new {meetingRoomId=ViewBag.MeetingRoomId })',
+                }
+
+            ],
+
+            eventClick: function (calEvent, jsEvent, view) {
+                ModifyCancelMeeting(calEvent);
+            }
+        });
+
+    });
+
+    function CreateMeeting() {
+        $("#CreateMeetingForm").load("/Meeting/CreateMeetingForm", { meetingRoomId: @ViewBag.MeetingRoomId });
+        $("#CreateMeetingModal").modal('show');
+
+    }
+
+    function ModifyCancelMeeting(singleClickedEvent) {
+        $("#ModifyCancelMeetingContent").load("/Meeting/ModifyMeetingForm", { meetingId: singleClickedEvent.id });
+        $("#ModifyCancelMeetingModal").modal('show');
+
+    }
+
+</script>
+<div id="calendar"></div>
+
+<!--   下面的代码是新建会议modal对话框和回调Javascript函数     -->
+<div class="modal fade" id="CreateMeetingModal" tabindex="-1" role="dialog" aria-labelledby="ModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="CreateMeetingModalTitle">新建会议</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="CreateMeetingModalContent">
+
+                @using (Ajax.BeginForm("CreateMeeting", "Meeting", new { meetingRoomId = ViewBag.MeetingRoomId }, new AjaxOptions()
+                {
+                    InsertionMode = InsertionMode.Replace,
+                    HttpMethod = "POST",
+                    OnSuccess = "CreateMeetingOnSuccess",
+                    OnBegin = "CreateMeetingOnBegin"
+                }, new { @class = "form-horizontal" }))
+                {
+                    <div id="CreateMeetingForm"></div>
+                }
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function CreateMeetingOnBegin() {
+        $("#CreateMeetingError").css("display", "none");
+        $("#CreateMeetingError").html("");
+    }
+    var output = "";
+    function CreateMeetingOnSuccess(data) {
+        if (data.isSuccess === true) {
+
+
+            $('#calendar').fullCalendar('renderEvent', { id: data.eventdetail.Id, title: data.eventdetail.Title, start: data.eventdetail.StartDateTime, end: data.eventdetail.EndDateTime });
+            $("#CreateMeetingModal").modal('hide');
+            output = "";
+
+        } else {
+            output = "";
+            for (var item in data.ModelStateErrors) {
+                if (data.ModelStateErrors[item].length > 0) {
+                    output = output + item + "  ";
+                    for (var content in data.ModelStateErrors[item]) {
+                        output = output + data.ModelStateErrors[item][content] + "<br/>";
+                    }
+                }
+            }
+        }
+
+        $("#CreateMeetingError").html(output);
+        $("#CreateMeetingError").css("display", "block");
+
+    }
+</script>
+
+<!--下面是修改取消会议的Modal对话框和回调脚本函数-->
+<div class="modal fade" id="ModifyCancelMeetingModal" tabindex="-1" role="dialog" aria-labelledby="ModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModifyCancelMeetingTitle">变更会议</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="ModifyCancelMeetingContent">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function ModifyMeetingOnBegin() {
+        $("#ModifyMeetingError").css("display", "none");
+        $("#ModifyMeetingError").html("");
+    }
+    var output = "";
+    function ModifyMeetingOnSuccess(data) {
+        if (data.isSuccess === true) {
+
+            $('#calendar').fullCalendar('removeEvents', data.eventdetail.Id);
+            $('#calendar').fullCalendar('renderEvent', { id: data.eventdetail.Id, title: data.eventdetail.Title, start: data.eventdetail.StartDateTime, end: data.eventdetail.EndDateTime });
+            $("#ModifyCancelMeetingModal").modal('hide');
+            output = "";
+
+        } else {
+            output = "";
+            for (var item in data.ModelStateErrors) {
+                if (data.ModelStateErrors[item].length > 0) {
+                    output = output + item + "  ";
+                    for (var content in data.ModelStateErrors[item]) {
+                        output = output + data.ModelStateErrors[item][content] + "<br/>";
+                    }
+                }
+            }
+        }
+
+        $("#ModifyMeetingError").html(output);
+        $("#ModifyMeetingError").css("display", "block");
+
+    }
+</script>

@@ -1,0 +1,60 @@
+﻿@using WebProject.Models
+@using X.PagedList.Mvc
+@using X.PagedList
+@model IPagedList<UserViewModel>
+
+<style type="text/css">
+
+    span > img{
+        height:50px;
+        width:50px;
+       
+        
+    }
+</style>
+<div>
+    <div class="page-header"><h2>用户列表</h2></div>
+    <div>
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    
+                    <th><span style="margin-left:90px;">姓名</span></th>
+                    <th>登陆账号</th>
+                    <th>邮箱地址</th>
+                    <th>职位</th>
+                    <th>部门</th>
+                    <th>主管邮箱</th>
+                    <th>入职时间</th>
+                    <th>联系电话</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                <tr>
+                    <td><span><img class="img-circle" alt="image" src="@Url.Action("GetUserPicture","Account",new { id=user.Id})" /></span><span style="margin-left:20px;">@user.FullName</span></td>
+
+                    <td><span>@user.UserName</span></td>
+                    <td><span>@user.Email</span></td>
+                    <td><span>@user.Title</span></td>
+                    <td><span>@user.Department</span></td>
+                    <td><span>@user.DirectManagerEmail</span></td>
+                    <td><span>@user.HireDate.ToShortDateString()</span></td>
+
+                    <td><span>@user.ContactPhone</span></td>
+                    <td><a class="padding-right-small" href="@Url.Action("EditUser","Account",new {id = user.Id})"><i class="fa fa-pencil"> 编辑</i></a></td>
+                   
+                    <td><a class="padding-right-small" href="@Url.Action("DeleteUser","Account",new {id = user.Id})"><i class="fa fa-trash-o"> 禁用</i></a></td>
+
+                </tr>
+                }
+
+            </tbody>
+
+        </table>
+        @Html.PagedListPager(Model, page => Url.Action("GetUsers", "Account", new { page }))
+
+    </div>
+
+</div>

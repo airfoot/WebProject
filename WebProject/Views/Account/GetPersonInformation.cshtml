@@ -1,0 +1,328 @@
+﻿@model WebProject.Models.UserViewModel
+<style type="text/css">
+
+        .align-center, .center {
+            text-align: center!important;
+        }
+
+        hr.hr {
+
+          border: 0;
+          height: 1px;
+          background-image: -webkit-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);
+          background-image: -moz-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);
+          background-image: -ms-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);
+          background-image: -o-linear-gradient(left, #f0f0f0, #8c8b8b, #f0f0f0);
+        }
+        .profile-user-info {
+            display: table;
+            width: 98%;
+            width: calc(100% - 24px);
+            margin: 0 auto
+        }
+
+        .profile-info-row {
+            display: table-row
+        }
+
+        .profile-info-name,
+        .profile-info-value {
+            display: table-cell;
+            border-top: 1px dotted #D5E4F1
+        }
+
+        .profile-info-name {
+            text-align: right;
+            padding: 6px 10px 6px 4px;
+            font-weight: 400;
+            color: #667E99;
+            background-color: transparent;
+            width: 110px;
+            vertical-align: middle
+        }
+
+        .custom-name {
+            text-align: right;
+            padding: 6px 10px 6px 4px;
+            font-weight: 400;
+            color: #667E99;
+            background-color: transparent;
+
+            vertical-align: middle
+        }
+
+        .custom-value {
+          text-align:left;
+            padding: 6px 4px 6px 6px
+        }
+
+        .profile-info-value {
+          text-align:left;
+            padding: 6px 4px 6px 6px
+        }
+
+
+
+        .profile-info-row:first-child .profile-info-name,
+        .profile-info-row:first-child .profile-info-value {
+            border-top: none
+        }
+
+
+        .profile-user-info-striped .profile-info-name {
+            color: #336199;
+            background-color: #EDF3F4;
+            border-top: 1px solid #F7FBFF
+        }
+
+        .profile-user-info-striped .profile-info-value {
+            border-top: 1px dotted #DCEBF7;
+            padding-left: 12px
+        }
+
+        .profile-picture {
+            border: 1px solid #CCC;
+            background-color: #FFF;
+            padding: 4px;
+            display: inline-block;
+            max-width: 100%;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            box-shadow: 1px 1px 1px rgba(0, 0, 0, .15)
+        }
+
+    @@media only screen and (max-width:960px) {
+    .profile-info-name {
+        width: 80px
+    }
+    .profile-user-info-striped .profile-info-name {
+        float: none;
+        width: auto;
+        text-align: left;
+        padding: 6px 4px 6px 10px;
+        display: block
+    }
+    .profile-user-info-striped .profile-info-value {
+        margin-left: 10px;
+        display: block
+    }
+        .custom-name {
+            text-align: center;
+            padding: 6px 10px 6px 4px;
+            font-weight: 400;
+            color: #667E99;
+            background-color: transparent;
+            vertical-align: middle
+        }
+
+        .custom-value {
+            text-align: center;
+            padding: 6px 4px 6px 6px
+        }
+}
+
+
+
+
+        .dark {
+            color: #333!important
+        }
+
+        .white {
+            color: #FFF!important
+        }
+
+        .red {
+            color: #DD5A43!important
+        }
+
+
+
+        .blue {
+            color: #478FCA!important
+        }
+
+        .light-blue {
+            color: #93CBF9!important
+        }
+
+        .green {
+            color: #69AA46!important
+        }
+
+
+
+</style>
+
+
+<div id="user-profile-2" class="user-profile">
+
+    <div class="page-header" style="margin-bottom:15px">
+        <h2>我的信息</h2>
+    </div>
+
+
+    <div class="row">
+        <div class="col-xs-12 col-md-3 center">
+            <span class="profile-picture">
+                <img class="img-thumbnail" style="width:210px;height:220px;" id="showUserPicture" alt="Image" src="@Url.Action("GetUserPicture", "Account", new { id = Model.Id })">
+
+            </span>
+            <div class="row center">
+                <a  href="#" data-toggle="modal" data-target="#ChangeUserPicture">更新图片</a>
+               <div style="margin-top:20px"></div>
+
+                <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ChangeUserPicture">
+         更新用户照片
+     </button>  -->
+            </div>
+
+            <div style="height:15px"></div>
+
+            <div class="row">
+                <div class="col-md-5 custom-name">
+                    @Html.LabelFor(m => m.Title)
+                </div>
+                <div class="col-md-6  custom-value">
+                    @Html.DisplayFor(m => m.Title)
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-5 custom-name ">
+                    @Html.LabelFor(m => m.Department)
+                </div>
+                <div class="col-md-6 custom-value ">
+                    @Html.DisplayFor(m => m.Department)
+                </div>
+            </div>
+
+        </div><!-- /.col -->
+
+        <div class="col-xs-12 col-md-4">
+            <h4 class="blue">
+                <span class="middle" style="font-weight:bold;">@Html.DisplayFor(m => m.FullName)</span>
+            </h4>
+
+            <div class="profile-user-info">
+                <div class="profile-info-row">
+                    <div class="profile-info-name"> @Html.LabelFor(m => m.UserName) </div>
+                    <div class="profile-info-value">
+                        <span>@Html.DisplayFor(m => m.UserName)</span>
+                    </div>
+                </div>
+
+                <div class="profile-info-row">
+                    <div class="profile-info-name"> @Html.LabelFor(m => m.Email) </div>
+                    <div class="profile-info-value">
+                        <span>@Html.DisplayFor(m => m.Email)</span>
+                    </div>
+                </div>
+
+                <div class="profile-info-row">
+                    <div class="profile-info-name"> @Html.LabelFor(m => m.HireDate) </div>
+                    <div class="profile-info-value">
+                        <span>@Model.HireDate.ToShortDateString()</span>
+                    </div>
+                </div>
+
+                <div class="profile-info-row">
+                    <div class="profile-info-name"> @Html.LabelFor(m => m.DirectManagerEmail) </div>
+                    <div class="profile-info-value">
+                        <span>@Html.DisplayFor(m => m.DirectManagerEmail)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="height:15px;"></div>
+            <hr class="hr"></hr>
+            <div style="height:15px;"></div>
+
+            <div class="profile-user-info">
+                <div class="profile-info-row">
+                    <div class="profile-info-name">
+                        <span>@Html.LabelFor(m => m.IdentityNumber) </span>
+                    </div>
+                    <div class="profile-info-value">
+                        <span>@Html.DisplayFor(m => m.IdentityNumber)</span>
+                    </div>
+                </div>
+
+                <div class="profile-info-row">
+                    <div class="profile-info-name">
+                        <span>@Html.LabelFor(m => m.ContactPhone)</span>
+                    </div>
+                    <div class="profile-info-value">
+                        <span>@Html.DisplayFor(m => m.ContactPhone)</span>
+                    </div>
+                </div>
+
+                <div class="profile-info-row">
+                    <div class="profile-info-name">
+                        <span> @Html.LabelFor(m => m.ContactAddress)</span>
+                    </div>
+                    <div class="profile-info-value">
+                        @Html.DisplayFor(m => m.ContactAddress)
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div><!-- /.col -->
+
+    <div class="modal fade" id="ChangeUserPicture" tabindex="-1" role="dialog" aria-labelledby="changeUserPicture" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">更新照片</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="file-loading">
+                        <input id="ChangeUserPictureFile" name="userPicture" type="file">
+                    </div>
+                    <div id="UploadErrors"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="CloseUpdateUserPictureButton" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+
+
+
+        $("#ChangeUserPictureFile").fileinput({
+            showPreview: true,
+            showUpload: true,
+            maxFileSize: 11500,
+            minFileCount: 1,
+            maxFileCount:1,
+            uploadUrl: "@Url.Action("UpdateUserPicture","Account",new {id=Model.Id })",
+            elErrorContainer: '#UploadErrors',
+            allowedFileExtensions: ["jpg", "jpeg", "png", "gif"],
+            uploadAsync: true
+        }).on("fileuploaded", function (events, params) {
+
+            var randomNumber = Math.random();
+            var src = "@Url.Action("GetUserPicture","Account",new {id=Model.Id})" + "?random=" + randomNumber;
+            $("#showUserPicture").attr("src", src);
+
+        });
+
+
+
+    </script>
+</div><!-- /.row -->
+
+	
+
