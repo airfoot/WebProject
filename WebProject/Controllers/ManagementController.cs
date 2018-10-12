@@ -8,6 +8,7 @@ using WebProject.Models;
 
 namespace WebProject.Controllers
 {
+    [Authorize(Roles ="Admin")]
     public class ManagementController : Controller
     {
 

@@ -18,6 +18,31 @@
         .navbar-default .navbar-brand, .navbar-default .navbar-brand:hover {
             color: #fff;
         }
+
+        footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100px;
+            background-color: lightsteelblue;
+        }
+
+        .ftable {
+            height: 50px;
+            width: 300px;
+            display: table;
+            margin: 0;
+        }
+
+        .ftable-row {
+            height: 17px;
+            width: 300px;
+            display: table-row
+        }
+
+            .ftable-row > span {
+                display: table-cell;
+            }
     </style>
 </head>
 <body class="theme-blue">
@@ -61,5 +86,13 @@
         </div>
 
     </div>
+    <footer>
+        <div class="ftable">
+            <div class="ftable-row"><span style="text-align:left">Admin角色用户名: </span><span> admin</span><span>  密码:</span><span>123456</span></div>
+            <div class="ftable-row"><span style="text-align:left">Manager角色用户名: </span><span> manager</span><span>  密码:</span><span>123456</span></div>
+            <div class="ftable-row"><span style="text-align:left">普通用户名: </span><span> test</span><span>  密码: </span><span>123456</span></div>
+
+        </div>
+    </footer>
 </body>
 </html>

@@ -8,7 +8,7 @@ using Microsoft.Owin.Security.Cookies;
 using Owin;
 using WebProject.Infrastructure;
 
-namespace WebProject.App_Start
+namespace WebProject
 {
     public class IdentityConfig
     {

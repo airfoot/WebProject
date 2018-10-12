@@ -1,0 +1,103 @@
+﻿@using WebProject.Models
+@model MeetingViewModel
+
+
+
+
+
+
+    <div>
+        <div id="CreateMeetingError" style="display:none" class="text-danger"></div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.OwnerEmail, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                <p class="form-control-static">@Html.DisplayFor(m => m.OwnerEmail)</p>
+                @Html.HiddenFor(m=>m.OwnerEmail)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.MeetingRoomName, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                <p class="form-control-static">@Html.DisplayFor(m => m.MeetingRoomName)</p>
+                @Html.HiddenFor(m=>m.MeetingRoomName)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.AttendeeEmails, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(m => m.AttendeeEmails, new { id = "CreateMeetingAttendeeTextArea", rows = "1", style = "height:34px", wrap = "soft", @class = "form-control CreateMeetingTextArea", placeholder = "请输入会议参加人的邮箱地址，以英文分号间隔" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.MeetingSubject, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.MeetingSubject, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.StartDateTime, new { @class = "col-md-2 control-label" })
+            <div class="col-md-4">
+                <div class="input-group date CreateMeeting_datetime_picker" data-date-format="MM/DD/YYYY/ HH:mm">
+                    @Html.TextBoxFor(m => m.StartDateTime, new { @class = "form-control", })
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.EndDateTime, new { @class = "col-md-2 control-label" })
+            <div class="col-md-4">
+                <div class="input-group date CreateMeeting_datetime_picker" data-date-format="MM/DD/YYYY/ HH:mm">
+                    @Html.TextBoxFor(m => m.EndDateTime, new { @class = "form-control"})
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.MeetingContent, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(m => m.MeetingContent, new { id = "CreateMeetingContentTextArea", rows = 10, wrap = "soft", style = "resize:none;", maxlength = "7000", @class = "form-control CreateMeetingTextArea" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3" style="float:right">
+                <input type="submit" class="btn btn-primary" style="margin-right:10px;" value="保存" />
+                <input type="button" class="btn btn-primary" data-dismiss="modal" value="关闭" />
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+<script type="text/javascript">
+    $("#CreateMeetingAttendeeTextArea").autoTextarea({
+        maxHeight: 300,
+        minHeight: 34
+    });
+    $("#CreateMeetingContentTextArea").autoTextarea({
+        maxHeight: 900,
+        minHeight: 220,
+    });
+</script>
+
+<script type="text/javascript">
+
+ //   $(function () {
+        $(".CreateMeeting_datetime_picker").datetimepicker({
+            format: 'MM/DD/YYYY HH:mm',
+            defaultDate: moment(),
+            showClose: true,
+            showTodayButton: true
+        });
+   
+
+ //   });
+   
+</script>
+

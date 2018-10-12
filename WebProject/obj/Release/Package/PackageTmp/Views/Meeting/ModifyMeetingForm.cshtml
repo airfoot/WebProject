@@ -1,0 +1,154 @@
+﻿@using WebProject.Models
+@model MeetingViewModel
+
+@using (Ajax.BeginForm("ModifyMeeting", "Meeting", new { meetingId = ViewBag.MeetingId }, new AjaxOptions()
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "POST",
+    OnSuccess = "ModifyMeetingOnSuccess",
+    OnBegin = "ModifyMeetingOnBegin"
+}, new { @class = "form-horizontal" }))
+{
+    <div id="ModifyCancelMeetingForm"></div>
+    <div>
+        <div id="ModifyMeetingError" style="display:none" class="text-danger"></div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.OwnerEmail, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                <p class="form-control-static">@Html.DisplayFor(m => m.OwnerEmail)</p>
+                @Html.HiddenFor(m => m.OwnerEmail)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.MeetingRoomName, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                <p class="form-control-static">@Html.DisplayFor(m => m.MeetingRoomName)</p>
+                @Html.HiddenFor(m => m.MeetingRoomName)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.AttendeeEmails, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(m => m.AttendeeEmails, new { id = "ModifyMeetingAttendeeTextArea", rows = "1", style = "height:34px", wrap = "soft", @class = "form-control ModifyMeetingTextArea", placeholder = "请输入会议参加人的邮箱地址，以英文分号间隔" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.MeetingSubject, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.MeetingSubject, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.StartDateTime, new { @class = "col-md-2 control-label" })
+            <div class="col-md-4">
+                <div class="input-group date" id="ModifyMeetingStartDateTime" data-date-format="YYYY/MM/DD HH:mm">
+                    <!--Html.TextBoxFor(m => m.StartDateTime.GetDateTimeFormats('G', System.Globalization.CultureInfo.CreateSpecificCulture("zh-CN"))[0], new { class = "form-control", })-->
+                    @Html.TextBox("StartDateTime", Model.StartDateTime.GetDateTimeFormats('G', System.Globalization.CultureInfo.CreateSpecificCulture("zh-CN"))[0], new { @class = "form-control" })
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.EndDateTime, new { @class = "col-md-2 control-label" })
+            <div class="col-md-4">
+                <div class="input-group date" id="ModifyMeetingEndDateTime" data-date-format="YYYY/MM/DD HH:mm">
+                    <!-- Html.TextBoxFor(m => m.EndDateTime.GetDateTimeFormats('G', System.Globalization.CultureInfo.CreateSpecificCulture("zh-CN"))[0], new { class = "form-control" })-->
+                    @Html.TextBox("EndDateTime", Model.EndDateTime.GetDateTimeFormats('G', System.Globalization.CultureInfo.CreateSpecificCulture("zh-CN"))[0], new { @class = "form-control" })
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.MeetingContent, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextAreaFor(m => m.MeetingContent, new { id = "ModifyMeetingContentTextArea", rows = 10, wrap = "soft", style = "resize:none;", maxlength = "7000", @class = "form-control CreateMeetingTextArea" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-4" style="float:right">
+                    @if (ViewBag.CanEditMeeting)
+                    {
+                        <input type="submit" class="btn btn-primary" style="margin-right:10px;" value="保存修改" />
+                        <input type="button" id="CancelMeetingButton" class="btn btn-primary" style="margin-right:10px;" value="取消会议" />
+                    }
+                    <input type="button" class="btn btn-primary" data-dismiss="modal" value="关闭" />
+                </div>
+            </div>
+        </div>
+}
+
+<!-- 下面是点击取消会议Button时，执行的代码-->
+<script type="text/javascript">
+    $(function () {
+        $("#CancelMeetingButton").click(function () {
+            $.post("@Url.Action("CancelMeeting", "Meeting", new { meetingId=ViewBag.MeetingId})",
+                function (data) {
+                    if (data.isSuccess === true) {
+                        $('#calendar').fullCalendar('removeEvents', '@ViewBag.MeetingId');
+                        $("#ModifyCancelMeetingModal").modal('hide');
+                        output = "";
+
+                    } else {
+                        output = "";
+                        for (var item in data.ModelStateErrors) {
+                            if (data.ModelStateErrors[item].length > 0) {
+                                output = output + item + "  ";
+                                for (var content in data.ModelStateErrors[item]) {
+                                    output = output + data.ModelStateErrors[item][content] + "<br/>";
+                                }
+                            }
+                        }
+                    }
+
+                    $("#ModifyMeetingError").html(output);
+                    $("#ModifyMeetingError").css("display", "block");
+
+                }
+            )
+        })
+
+    })
+
+</script>
+
+
+    <script type="text/javascript">
+        $("#ModifyMeetingAttendeeTextArea").autoTextarea({
+            maxHeight: 300,
+            minHeight: 34
+        });
+        $("#ModifyMeetingContentTextArea").autoTextarea({
+            maxHeight: 900,
+            minHeight: 220,
+        });
+    </script>
+
+    <script type="text/javascript">
+
+      // $(function () {
+            $("#ModifyMeetingStartDateTime").datetimepicker({
+                format: "YYYY/MM/DD HH:mm",
+                defaultDate: moment('@Model.StartDateTime'),
+                showClose: true,
+                showTodayButton: true
+
+            });
+            $("#ModifyMeetingEndDateTime").datetimepicker({
+                format: "YYYY/MM/DD HH:mm",
+                defaultDate: moment('@Model.EndDateTime'),
+                showClose: true,
+                showTodayButton: true
+
+            });
+      //  });
+
+    </script>
+
+
+
+  
+

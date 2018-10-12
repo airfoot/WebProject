@@ -32,6 +32,7 @@ namespace WebProject
 
             log4net.Config.XmlConfigurator.ConfigureAndWatch(new System.IO.FileInfo(HttpContext.Current.Server.MapPath(@"~/Log/Log4Net.config")));
             AreaRegistration.RegisterAllAreas();
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
         }
     }

@@ -1,0 +1,91 @@
+﻿@model WebProject.Models.LeaveApplicationViewModel
+
+
+<style type="text/css">
+    .row {
+        margin-top: 35px;
+    }
+</style>
+<div style="margin-top:50px; margin-left:0px; width:60%;">
+    @using (Html.BeginForm("ModifyAnnualLeave", "Leave", new {leaveApplicationId=Model.Id},FormMethod.Post, new { @class = "form-horizontal" }))
+    {
+        <h2 class="text-center row">修改年假休假申请</h2>
+        <div class="text-danger">
+            @Html.ValidationSummary()
+        </div>
+        <div class="form-group row">
+            @Html.LabelFor(m => m.StartDateTime, new { @class = "col-md-2 control-label" })
+            <div class="col-md-4">
+                <div class="input-group date" id="ModifyAnnualLeaveStartDateTime" data-date-format="YYY/MM/DD HH:mm">
+                    <!--  Html.TextBoxFor(m => m.StartDateTime.GetDateTimeFormats('G', System.Globalization.CultureInfo.CreateSpecificCulture("zh-CN"))[0], new { class = "form-control" })-->
+                    @Html.TextBox("StartDateTime", Model.StartDateTime.GetDateTimeFormats('G', System.Globalization.CultureInfo.CreateSpecificCulture("zh-CN"))[0], new { @class = "form-control" })
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            @Html.LabelFor(m => m.EndDateTime, new { @class = "col-md-2 control-label" })
+            <div class="col-md-4">
+                <div class="input-group date" id="ModifyAnnualLeaveEndDateTime" data-date-format="YYY/MM/DD HH:mm">
+                    <!--  Html.TextBoxFor(m => m.EndDateTime.GetDateTimeFormats('G', System.Globalization.CultureInfo.CreateSpecificCulture("zh-CN"))[0], new { class = "form-control" })-->
+                    @Html.TextBox("EndDateTime", Model.EndDateTime.GetDateTimeFormats('G', System.Globalization.CultureInfo.CreateSpecificCulture("zh-CN"))[0], new { @class = "form-control" })
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            @Html.LabelFor(m => m.ApproverEmail, new { @class = "col-md-2 control-label" })
+            <div class="col-md-4">
+                <div class="input-group">
+                    @Html.TextBoxFor(m => m.ApproverEmail, new { @class = "form-control" })
+                    <span class="input-group-addon">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            @Html.LabelFor(m => m.Description, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(m => m.Description, new { id = "ModifyAnnualLeaveDescriptionTextArea", rows = "10", wrap = "soft", @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group row">
+            @Html.LabelFor(m => m.Comment, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(m => m.Comment, new { id = "ModifyAnnualLeaveCommentTextArea", rows = "5", wrap = "soft", @class = "form-control" })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-offset-2">
+                <input type="submit" class="btn btn-primary" style="width:100px; margin-left:15px;" value="保存" />
+               
+            </div>
+        </div>
+
+    }
+
+
+</div>
+
+<script type="text/javascript">
+
+            $("#ModifyAnnualLeaveStartDateTime").datetimepicker({
+                format: "YYYY/MM/DD HH:mm",
+               // defaultDate: moment(),
+                showClose: true,
+                showTodayButton: true
+
+            });
+            $("#ModifyAnnualLeaveEndDateTime").datetimepicker({
+                format: "YYYY/MM/DD HH:mm",
+             //   defaultDate: moment(),
+                showClose: true,
+                showTodayButton: true
+
+            });
+</script>

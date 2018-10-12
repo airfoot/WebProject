@@ -1,0 +1,23 @@
+﻿<div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>登陆用户</th>
+                <th>用户ID</th>
+                <th>登陆时间</th>
+                <th>登陆IP地址</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var log in ViewBag.AccessLogs)
+            {
+            <tr>
+                <td>@log.UserName</td>
+                <td>@log.UserId</td>
+                <td>@log.LoginDateTime</td>
+                <td>@log.RemoteIP</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

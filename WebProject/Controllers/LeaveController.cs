@@ -12,6 +12,7 @@ using X.PagedList;
 
 namespace WebProject.Controllers
 {
+    [Authorize]
     public class LeaveController : Controller
     {
         private ILogger _logger;

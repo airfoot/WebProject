@@ -1,0 +1,249 @@
+﻿@using WebProject.Infrastructure
+<style type="text/css">
+    table tr {
+        height: 10px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    td span {
+        
+        display:block;
+        padding: 0px,0px,0px,0px;
+        margin: 0px,0px,0px,0px;
+        width:200px;
+        height: 15px;
+        
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-size: small;
+    }
+    
+    table{
+        
+        font-size:small !important;
+    }
+
+
+    .UserFullName {
+        display: block;
+        width: 110px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-size: small;
+    }
+    .panel-heading{
+        height:45px;
+    }
+    .panel-body{
+        height:290px;
+    }
+    .panel.with-nav-tabs .panel-heading {
+        padding: 5px 5px 0 5px;
+    }
+
+    .panel.with-nav-tabs .nav-tabs {
+        border-bottom: none;
+    }
+
+    .panel.with-nav-tabs .nav-justified {
+        margin-bottom: -1px;
+    }
+
+</style>
+<div>
+    <div class="row" style="margin-left:10px;">
+        <div class="col-md-5">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">我的会议</h3>
+                </div>
+                <div class="panel-body table-responsive" >
+                    <table class="table table-striped ">
+                        <thead>
+                            <tr>
+                                <th>会议开始时间</th>
+                                <th>会议结束时间</th>
+                                <th>会议室</th>
+                                <th>会议主题</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var meeting in ViewBag.MyMeetings)
+                            {
+                                <tr>
+                                    <td class="StartDateTime">@meeting.StartDateTime.GetDateTimeFormats('g', System.Globalization.CultureInfo.CreateSpecificCulture("zh-CN"))[0]</td>
+                                    <td class="EndDateTime">@meeting.EndDateTime.GetDateTimeFormats('g', System.Globalization.CultureInfo.CreateSpecificCulture("zh-CN"))[0]</td>
+                                    <td class="MeetingRoom">@meeting.MeetingRoomName</td>
+                                    <td class="MeetingSubject"><span >@meeting.MeetingSubject</span></td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                    <p style="margin-left:10px;margin-top:20px" >
+                        
+                            @Html.ActionLink("更多...", "MyMeetings", "Meeting")
+                        
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div>
+                @if (HttpContext.Current.User.IsInRole("Manager") || HttpContext.Current.User.IsInRole("Admin"))
+                {
+                    <div class="panel with-nav-tabs panel-default">
+                        <div class="panel-heading">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#MyLeaveApplication" data-toggle="tab">我的休假申请</a></li>
+                                <li><a href="#MyApproving" data-toggle="tab">我的休假审批</a></li>
+                            </ul>
+                        </div>
+                        <div class="panel-body">
+                            <div class="tab-content">
+                                <div class="table-responsive tab-pane fade in active" id="MyLeaveApplication">
+                                    <table class="table table-striped ">
+                                        <thead>
+                                            <tr>
+                                                <th>年假开始时间</th>
+                                                <th>年假结束时间</th>
+                                                <th>请假天数</th>
+                                                <th>请假事由</th>
+                                                <th>状态</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var leave in ViewBag.MyAnnualLeaveApplications)
+                                            {
+                                                <tr>
+                                                    <td class="StartDateTime">@leave.StartDateTime.GetDateTimeFormats('g', System.Globalization.CultureInfo.CreateSpecificCulture("zh-CN"))[0]</td>
+                                                    <td class="EndDateTime">@leave.EndDateTime.GetDateTimeFormats('g', System.Globalization.CultureInfo.CreateSpecificCulture("zh-CN"))[0]</td>
+                                                    <td class="TotalDays">@leave.TotalDays</td>
+                                                    <td class="Discription"><span>@leave.Description</span></td>
+                                                    <td class="TaskState">
+
+                                                        @if (leave.TaskState == TaskState.Applying)
+                                                        {
+
+                                                            @Html.Raw("申请中")
+                                                        }
+                                                        else if (leave.TaskState == TaskState.Approved)
+                                                        {
+                                                            @Html.Raw("已批准")
+                                                        }
+                                                        else if (leave.TaskState == TaskState.Refused)
+                                                        {
+                                                            @Html.Raw("已拒绝")
+                                                        }
+                                                        else if (leave.TaskState == TaskState.Canceled)
+                                                        {
+                                                            @Html.Raw("已取消")
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                    <p style="margin-left:10px;margin-bottom:5px;">
+                                        @Html.ActionLink("更多...", "MyAnnualLeave", "Leave")
+                                    </p>
+                                    
+                                </div>
+                                <div class="table-responsive tab-pane fade" id="MyApproving">
+                                    <table class="table table-striped ">
+                                        <thead>
+                                            <tr>
+                                                <th>申请人</th>
+                                                <th>请假开始时间</th>
+                                                <th>请假结束时间</th>
+                                                <th>请假天数</th>
+                                                <th>请假事由</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var leave in ViewBag.MyApprovingAnnualLeaves)
+                                            {
+                                                <tr>
+                                                    <td class="UserFullName">@leave.InitiatorFullName</td>
+                                                    <td class="StartDateTime">@leave.StartDateTime.GetDateTimeFormats('g', System.Globalization.CultureInfo.CreateSpecificCulture("zh-CN"))[0]</td>
+                                                    <td class="EndDateTime">@leave.EndDateTime.GetDateTimeFormats('g', System.Globalization.CultureInfo.CreateSpecificCulture("zh-CN"))[0]</td>
+                                                    <td class="TotalDays">@leave.TotalDays</td>
+                                                    <td class="Discription"><span>@leave.Description</span></td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                    <p style="margin-left:10px;margin-bottom:5px;">@Html.ActionLink("更多...", "MyApprovingAnnualLeave", "Leave")</p>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                }
+                else
+                {
+                    <div class="panel with-nav-tabs panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">我的休假申请</h3>
+                        </div>
+                        <div class="panel-body table-responsive">
+                            
+                                    <table class="table table-striped ">
+                                        <thead>
+                                            <tr>
+                                                <th>年假开始时间</th>
+                                                <th>年假结束时间</th>
+                                                <th>请假天数</th>
+                                                <th>请假事由</th>
+                                                <th>状态</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var leave in ViewBag.MyAnnualLeaveApplications)
+                                            {
+                                                <tr>
+                                                    <td>@leave.StartDateTime.GetDateTimeFormats('g', System.Globalization.CultureInfo.CreateSpecificCulture("zh-CN"))[0]</td>
+                                                    <td>@leave.EndDateTime.GetDateTimeFormats('g', System.Globalization.CultureInfo.CreateSpecificCulture("zh-CN"))[0]</td>
+                                                    <td>@leave.TotalDays</td>
+                                                    <td><span>@leave.Description</span></td>
+                                                    <td>
+
+                                                        @if (leave.TaskState == TaskState.Applying)
+                                                        {
+
+                                                            @Html.Raw("申请中")
+                                                        }
+                                                        else if (leave.TaskState == TaskState.Approved)
+                                                        {
+                                                            @Html.Raw("已批准")
+                                                        }
+                                                        else if (leave.TaskState == TaskState.Refused)
+                                                        {
+                                                            @Html.Raw("已拒绝")
+                                                        }
+                                                        else if (leave.TaskState == TaskState.Canceled)
+                                                        {
+                                                            @Html.Raw("已取消")
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                    <p style="margin-left:10px;margin-bottom:5px;">
+                                        @Html.ActionLink("更多...", "MyAnnualLeave", "Leave")
+                                    </p>
+                                   
+                                </div>
+                         </div>
+                        }
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
