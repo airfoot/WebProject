@@ -1,0 +1,26 @@
+﻿@using WebProject.Models.Menu
+@model List<MenuInformation>
+
+<ul>
+    <li><a href="/home/index" class="nav-header"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a></li>
+    @foreach(var menuItem in Model)
+    {
+        if(menuItem.SubMenu.Count > 0)
+        {
+            <li><a href="@menuItem.Url" data-target=".@menuItem.MenuName" class="nav-header collapsed" data-toggle="collapse"><i class="@menuItem.CssClass"></i>@menuItem.DisplayName<i class="fa fa-collapse"></i></a></li>
+            <li>
+                <ul class="@menuItem.MenuName nav nav-list collapse">
+                    @foreach(var sub in menuItem.SubMenu)
+                    {
+                        <li><a href="@sub.Url"> <span class="@sub.CssClass"></span>@sub.DisplayName</a></li>
+                    }
+                </ul>
+            </li>
+        }
+        else
+        {
+            <li><a href="@menuItem.Url" class="nav-header"><i class="@menuItem.CssClass"></i>@menuItem.DisplayName</a></li>
+        }
+    }
+
+</ul>

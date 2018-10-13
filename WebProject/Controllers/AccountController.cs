@@ -23,7 +23,7 @@ namespace WebProject.Controllers
         {
             this._context = webProjectDbContext;
         }
-
+        [HttpGet]
         public ActionResult GetPersonInformation()
         {
             string userId = this.User.Identity.GetUserId();
@@ -177,6 +177,7 @@ namespace WebProject.Controllers
         }
 
         // GET: Account
+        [HttpGet]
         public ActionResult GetUsers(int? page)
         {
             var allUsers = from u in UserManager.Users
@@ -207,6 +208,7 @@ namespace WebProject.Controllers
         /// </summary>
         /// <param name="Id">The Id of User object.</param>
         /// <returns></returns>
+        [HttpGet]
         public FilePathResult GetUserPicture(string id)
         {
             User user = UserManager.FindById(id);
@@ -292,7 +294,7 @@ namespace WebProject.Controllers
             return View("Errors");
             
         }
-
+        [HttpPost]
         public ActionResult UpdateUserPicture(HttpPostedFileBase userPicture,string id)
         {
             string userPictureFilePath = null;
@@ -340,6 +342,7 @@ namespace WebProject.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet]
         public ActionResult Login(string returnUrl)
         {
             if (HttpContext.User.Identity.IsAuthenticated)
@@ -350,8 +353,9 @@ namespace WebProject.Controllers
             return View();
         }
 
-        [HttpPost]
+        
         [AllowAnonymous]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Login(Login login, string returnUrl)
         {

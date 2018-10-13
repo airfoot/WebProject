@@ -1,0 +1,93 @@
+﻿@using WebProject.Infrastructure
+@using WebProject.Models;
+@model Password
+<ul id="main-menu" class="nav navbar-nav navbar-right">
+    <li class="dropdown hidden-xs">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <span class="glyphicon glyphicon-user padding-right-small" style="position:relative;top: 3px;"></span>@HttpContext.Current.User.Identity.GetUserFullName()
+            <i class="fa fa-caret-down"></i>
+        </a>
+        <ul class="dropdown-menu" >
+            <li>@Html.ActionLink("个人信息", "GetPersonInformation", "Account")</li>
+            <li class="divider"></li>
+            <li><a href="#" data-target="#ResetPasswordModal" data-toggle="modal">重置登陆密码</a></li>
+            <li>@Html.ActionLink("注销", "Logout", "Account")</li>
+        </ul>
+    </li>
+</ul>
+
+<script type="text/javascript">
+    function ResetPasswordOnBegin() {
+        $("#ResetPasswordError").css("display", "none");
+        $("#ResetPasswordError").html("");
+    }
+    var output="";
+    function ResetPasswordOnSuccess(data) {
+        if (data.isSuccess === true) {
+            $("#ResetPasswordModal").modal('hide');
+            output = "";
+        } else {
+            output = "";
+            for (var item in data.ModelStateErrors) {
+                if (data.ModelStateErrors[item].length > 0) {
+                    output = output + item + "  ";
+                    for (var content in data.ModelStateErrors[item]) {
+                        output = output + data.ModelStateErrors[item][content] + "<br/>";
+                    }
+                }
+             }
+        }
+            $("#ResetPasswordError").html(output);
+            $("#ResetPasswordError").css("display", "block");
+        }
+</script>
+<div id="ResetPasswordModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">重置登陆密码</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div id="modalbody" class="modal-body">
+
+
+                @using (Ajax.BeginForm("ResetPassword", "Account", new AjaxOptions()
+                {
+                    InsertionMode = InsertionMode.Replace,
+                    HttpMethod = "POST",
+                    OnSuccess = "ResetPasswordOnSuccess",
+                    OnBegin = "ResetPasswordOnBegin"
+                }))
+                {
+                    <div>
+
+                        <div id="ResetPasswordError" style="display:block" class="text-danger"></div>
+                        <div class="form-group">
+                           
+                            @Html.LabelFor(m => m.OldPassword)
+                            @Html.PasswordFor(m=>m.OldPassword, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.OldPassword)
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.NewPassword)
+                            @Html.PasswordFor(m => m.NewPassword, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.NewPassword)
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.ConfirmPassword)
+                            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.ConfirmPassword)
+                        </div>
+
+                        <button class="btn btn-default" type="submit">提交</button>
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+</div>

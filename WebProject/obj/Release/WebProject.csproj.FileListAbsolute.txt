@@ -96,8 +96,8 @@ D:\UpdateWebProject\WebProject\WebProject\bin\System.Web.Webpages.Razor.xml
 D:\UpdateWebProject\WebProject\WebProject\bin\System.Web.Helpers.xml
 D:\UpdateWebProject\WebProject\WebProject\bin\System.Web.Mvc.xml
 D:\UpdateWebProject\WebProject\WebProject\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-D:\UpdateWebProject\WebProject\WebProject\obj\Release\WebProject.csprojAssemblyReference.cache
 D:\UpdateWebProject\WebProject\WebProject\obj\Release\WebProject.csproj.CoreCompileInputs.cache
 D:\UpdateWebProject\WebProject\WebProject\obj\Release\WebProject.csproj.CopyComplete
 D:\UpdateWebProject\WebProject\WebProject\obj\Release\WebProject.dll
 D:\UpdateWebProject\WebProject\WebProject\obj\Release\WebProject.pdb
+D:\UpdateWebProject\WebProject\WebProject\obj\Release\WebProject.csprojAssemblyReference.cache
