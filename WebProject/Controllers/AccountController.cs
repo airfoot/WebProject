@@ -12,16 +12,19 @@ using Microsoft.AspNet.Identity.Owin;
 using WebProject.Models;
 using System.IO;
 using X.PagedList;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace WebProject.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
+        private ILogger _logger;
         private WebProjectDbContext _context;
-        public AccountController(WebProjectDbContext webProjectDbContext)
+        public AccountController(ILogger logger, WebProjectDbContext webProjectDbContext)
         {
             this._context = webProjectDbContext;
+            this._logger = logger;
         }
         [HttpGet]
         public ActionResult GetPersonInformation()
@@ -107,6 +110,10 @@ namespace WebProject.Controllers
                     int splitIndex = userPicture.ContentType.LastIndexOf(@"/");
                     string newFileName = Guid.NewGuid().ToString()+"."  + userPicture.ContentType.Substring(++splitIndex);
                     userPictureFilePath = Path.Combine(Server.MapPath("/Images/UserPicture"), newFileName);
+                    if(!Directory.Exists(Server.MapPath("/Images/UserPicture")))
+                    {
+                        Directory.CreateDirectory(Server.MapPath("/Images/UserPicture"));
+                    }
                     userPicture.SaveAs(userPictureFilePath);
 
                 }
@@ -250,13 +257,18 @@ namespace WebProject.Controllers
             User user = UserManager.FindById(id);
             if(userViewModel.Password!=null && userViewModel.Password.Length>=6)
             {
-                string resetToken = UserManager.GeneratePasswordResetToken(id);
-                IdentityResult passwordChangeResult = UserManager.ResetPassword(id, resetToken, userViewModel.Password);
-                if(!passwordChangeResult.Succeeded)
+                try {
+                User cUser = UserManager.FindById(id);
+                String hashedNewPassword = UserManager.PasswordHasher.HashPassword(userViewModel.Password);
+                UserStore<User> store = new UserStore<User>();
+                store.SetPasswordHashAsync(cUser, hashedNewPassword);
+                }
+                catch(Exception e)
                 {
-                    AddErrors(passwordChangeResult);
+                    ModelState.AddModelError("", "重置密码失败");
                     return View(userViewModel);
                 }
+             
             }
             user.FullName = userViewModel.FullName;
             user.UserName = userViewModel.UserName;
@@ -307,11 +319,28 @@ namespace WebProject.Controllers
                     int splitIndex = userPicture.ContentType.LastIndexOf(@"/");
                     string newFileName = Guid.NewGuid().ToString() + "." + userPicture.ContentType.Substring(++splitIndex);
                     userPictureFilePath = Path.Combine(Server.MapPath("/Images/UserPicture"),  newFileName);
+                    if (!Directory.Exists(Server.MapPath("/Images/UserPicture")))
+                    {
+                        Directory.CreateDirectory(Server.MapPath("/Images/UserPicture"));
+                    }
                     userPicture.SaveAs(userPictureFilePath);
 
                     if(!string.IsNullOrEmpty(user.UserIconURL) && !user.UserIconURL.Contains("defaultUser.jpg"))
                     {
-                        System.IO.File.Delete(user.UserIconURL);
+                        try
+                        {
+                            if(System.IO.File.Exists(user.UserIconURL))
+                            {
+                                System.IO.File.Delete(user.UserIconURL);
+                            }
+                            
+                        }
+                        catch(Exception e)
+                        {
+                           _logger.Error(e.Message, e);
+                        }
+
+                        
                     }
                     user.UserIconURL = userPictureFilePath;
                     //Save updated user picture
@@ -347,20 +376,22 @@ namespace WebProject.Controllers
         {
             if (HttpContext.User.Identity.IsAuthenticated)
             {
-                return View("Error", new string[] { "Access Denied" });
+                return View("Errors", new string[] { "Access Denied" });
             }
             ViewBag.returnUrl = returnUrl;
             return View();
         }
 
         
-        [AllowAnonymous]
+        
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public ActionResult Login(Login login, string returnUrl)
         {
             if (ModelState.IsValid)
             {
+                //User user = UserManager.Find(login.Username, login.Password);
                 User user = UserManager.Find(login.Username, login.Password);
                 if (user == null)
                 {
@@ -437,6 +468,13 @@ namespace WebProject.Controllers
             }
         }
 
+        //private WebProjectUserManager UserManager
+        //{
+        //    get
+        //    {
+        //        return HttpContext.GetOwinContext().GetUserManager<WebProjectUserManager>();
+        //    }
+        //}
         private WebProjectUserManager UserManager
         {
             get

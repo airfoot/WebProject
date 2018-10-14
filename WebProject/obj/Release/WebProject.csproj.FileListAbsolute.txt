@@ -100,4 +100,3 @@ D:\UpdateWebProject\WebProject\WebProject\obj\Release\WebProject.csproj.CoreComp
 D:\UpdateWebProject\WebProject\WebProject\obj\Release\WebProject.csproj.CopyComplete
 D:\UpdateWebProject\WebProject\WebProject\obj\Release\WebProject.dll
 D:\UpdateWebProject\WebProject\WebProject\obj\Release\WebProject.pdb
-D:\UpdateWebProject\WebProject\WebProject\obj\Release\WebProject.csprojAssemblyReference.cache
